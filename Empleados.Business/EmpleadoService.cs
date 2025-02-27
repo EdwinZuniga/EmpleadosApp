@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Empleados.DataAccess.Repositories;
 using Empleados.Models;
 
@@ -15,6 +18,11 @@ namespace Empleados.Business.Services
         public async Task<IEnumerable<Empleado>> GetAllEmpleadosAsync()
         {
             return await _empleadoRepository.GetAllAsync();
+        }
+
+        public async Task<PaginatedResult<Empleado>> GetPagedEmpleadosAsync(int pageIndex, int pageSize, string searchTerm = null)
+        {
+            return await _empleadoRepository.GetPagedAsync(pageIndex, pageSize, searchTerm);
         }
 
         public async Task<Empleado> GetEmpleadoByIdAsync(int id)
@@ -37,12 +45,10 @@ namespace Empleados.Business.Services
 
         public async Task<Empleado> UpdateEmpleadoAsync(int id, Empleado empleado)
         {
-            // Verificar que existe
             var existeEmpleado = await _empleadoRepository.GetByIdAsync(id);
             if (existeEmpleado == null)
                 throw new KeyNotFoundException($"No se encontró empleado con ID {id}");
             
-            // Validar email único
             if (await _empleadoRepository.ExisteEmailAsync(empleado.Email, id))
                 throw new InvalidOperationException($"Ya existe otro empleado con el email {empleado.Email}");
             

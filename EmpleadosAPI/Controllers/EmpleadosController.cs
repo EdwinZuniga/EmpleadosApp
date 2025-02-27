@@ -22,16 +22,34 @@ namespace EmpleadosAPI.Controllers
         // GET: api/Empleados
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Empleado>>> GetEmpleados()
+        public async Task<ActionResult<IEnumerable<Empleado>>> GetEmpleados(
+            [FromQuery] int pageIndex = 1, 
+            [FromQuery] int pageSize = 10, 
+            [FromQuery] string searchTerm = null)
         {
             try
             {
-                var empleados = await _empleadoService.GetAllEmpleadosAsync();
-                return Ok(empleados);
+                if (pageSize <= 0)
+                    pageSize = 10;
+
+                if (pageIndex <= 0)
+                    pageIndex = 1;
+
+                // paginación y/o búsqueda
+                if (pageIndex > 0 && pageSize > 0)
+                {
+                    var paginatedResult = await _empleadoService.GetPagedEmpleadosAsync(pageIndex, pageSize, searchTerm);
+                    return Ok(paginatedResult);
+                }
+                else
+                {
+                    var empleados = await _empleadoService.GetAllEmpleadosAsync();
+                    return Ok(empleados);
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error al obtener todos los empleados");
+                _logger.LogError(ex, "Error al obtener empleados");
                 return StatusCode(StatusCodes.Status500InternalServerError, "Error al procesar la solicitud");
             }
         }

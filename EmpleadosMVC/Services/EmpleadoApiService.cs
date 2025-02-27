@@ -1,5 +1,6 @@
 using Empleados.Models;
 
+
 namespace EmpleadosMVC.Services
 {
     public class EmpleadoApiService
@@ -18,6 +19,20 @@ namespace EmpleadosMVC.Services
             var response = await _httpClient.GetAsync(_apiUrl);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<IEnumerable<Empleado>>();
+        }
+
+        public async Task<PaginatedResult<Empleado>> GetPagedEmpleadosAsync(int pageIndex, int pageSize, string searchTerm = null)
+        {
+            var queryString = $"?pageIndex={pageIndex}&pageSize={pageSize}";
+            
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                queryString += $"&searchTerm={Uri.EscapeDataString(searchTerm)}";
+            }
+
+            var response = await _httpClient.GetAsync(_apiUrl + queryString);
+            response.EnsureSuccessStatusCode();
+            return await response.Content.ReadFromJsonAsync<PaginatedResult<Empleado>>();
         }
 
         public async Task<Empleado> GetEmpleadoByIdAsync(int id)

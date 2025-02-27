@@ -18,18 +18,26 @@ namespace EmpleadosMVC.Controllers
         }
 
         // GET: Empleados
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm, int pageIndex = 1, int pageSize = 10)
         {
             try
             {
-                var empleados = await _empleadoApiService.GetAllEmpleadosAsync();
-                return View(empleados);
+                ViewBag.CurrentSearchTerm = searchTerm;
+                
+                var result = await _empleadoApiService.GetPagedEmpleadosAsync(pageIndex, pageSize, searchTerm);
+                return View(result);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener la lista de empleados");
                 TempData["ErrorMessage"] = "No se pudo obtener la lista de empleados. Por favor, intente de nuevo más tarde.";
-                return View(new List<Empleado>());
+                return View(new PaginatedResult<Empleado> 
+                { 
+                    Items = new List<Empleado>(),
+                    PageIndex = pageIndex,
+                    PageSize = pageSize,
+                    TotalCount = 0
+                });
             }
         }
 
