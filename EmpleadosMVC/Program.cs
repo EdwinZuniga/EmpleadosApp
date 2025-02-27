@@ -1,7 +1,12 @@
+using EmpleadosMVC.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Configuración para el servicio de API
+builder.Services.AddHttpClient<EmpleadoApiService>();
 
 var app = builder.Build();
 
