@@ -1,0 +1,61 @@
+@model Empleados.Models.Empleado
+@{
+    ViewData["Title"] = "Eliminar Empleado";
+}
+
+<div class="container">
+    <h1 class="my-4">Eliminar Empleado</h1>
+
+    <div class="alert alert-danger">
+        <h4><i class="bi bi-exclamation-triangle"></i> ¿Está seguro de que desea eliminar este empleado?</h4>
+        <p>Esta acción no se puede deshacer.</p>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-header bg-danger text-white">
+            <h4 class="mb-0">@Model.Nombre @Model.Apellido</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Id)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Id)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Nombre)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Nombre)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Apellido)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Apellido)</dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Email)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Email)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Telefono)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Telefono)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.Salario)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Salario)</dd>
+
+                        <dt class="col-sm-4">@Html.DisplayNameFor(model => model.FechaIngreso)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.FechaIngreso)</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="Id" />
+                <button type="submit" class="btn btn-danger">
+                    <i class="bi bi-trash"></i> Eliminar
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="bi bi-arrow-left"></i> Cancelar
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
