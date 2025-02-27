@@ -28,7 +28,17 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 // Configuración para el servicio de API
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromHours(2);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+builder.Services.AddHttpClient<AuthService>();
 builder.Services.AddHttpClient<EmpleadoApiService>();
+builder.Services.AddScoped<AuthService>();
 
 var app = builder.Build();
 
@@ -40,6 +50,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseSession();
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

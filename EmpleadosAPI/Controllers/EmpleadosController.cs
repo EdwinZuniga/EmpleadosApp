@@ -7,7 +7,7 @@ namespace EmpleadosAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize]
+    [Authorize]
     public class EmpleadosController : ControllerBase
     {
         private readonly IEmpleadoService _empleadoService;
@@ -23,8 +23,8 @@ namespace EmpleadosAPI.Controllers
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Empleado>>> GetEmpleados(
-            [FromQuery] int pageIndex = 1, 
-            [FromQuery] int pageSize = 10, 
+            [FromQuery] int pageIndex = 1,
+            [FromQuery] int pageSize = 10,
             [FromQuery] string searchTerm = null)
         {
             try
@@ -116,7 +116,11 @@ namespace EmpleadosAPI.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    return BadRequest(ModelState);
+                    var errors = ModelState.Values.SelectMany(v => v.Errors)
+                                        .Select(e => e.ErrorMessage)
+                                        .ToList();
+                    _logger.LogWarning($"Errores de validación: {string.Join(", ", errors)}");
+                    return BadRequest(new { errors = errors });
                 }
 
                 if (id != empleado.Id)
@@ -124,7 +128,18 @@ namespace EmpleadosAPI.Controllers
                     return BadRequest("ID de empleado no coincide con el ID de la ruta");
                 }
 
-                var empleadoActualizado = await _empleadoService.UpdateEmpleadoAsync(id, empleado);
+                // Obtén la entidad existente
+                var empleadoExistente = await _empleadoService.GetEmpleadoByIdAsync(id);
+
+                // Actualiza solo las propiedades, no la entidad completa
+                empleadoExistente.Nombre = empleado.Nombre;
+                empleadoExistente.Apellido = empleado.Apellido;
+                empleadoExistente.Email = empleado.Email;
+                empleadoExistente.Telefono = empleado.Telefono;
+                empleadoExistente.Salario = empleado.Salario;
+                empleadoExistente.FechaIngreso = empleado.FechaIngreso;
+
+                var empleadoActualizado = await _empleadoService.UpdateEmpleadoAsync(id, empleadoExistente);
                 return Ok(empleadoActualizado);
             }
             catch (KeyNotFoundException ex)

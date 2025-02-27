@@ -102,6 +102,9 @@ builder.Services.AddCors(options =>
     });
 });
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -119,5 +122,20 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var logger = services.GetRequiredService<ILogger<Program>>();
+    try
+    {
+        await EmpleadosAPI.Data.AdminUserSeed.SeedAdminUserAsync(services);
+        logger.LogInformation("Usuario administrador creado correctamente.");
+    }
+    catch (Exception ex)
+    {
+        logger.LogError(ex, "Error al inicializar la base de datos con el usuario administrador.");
+    }
+}
 
 app.Run();

@@ -36,24 +36,46 @@ namespace EmpleadosAPI.Controllers
             public string Password { get; set; }
         }
 
-        [HttpPost("login")]
+        [HttpPost("identity-login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<IActionResult> IdentityLogin([FromBody] IdentityLoginModel model)
         {
+            // Verifica si el usuario existe en la base de datos de Identity
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
             {
-                return Unauthorized("Usuario o contraseña incorrectos");
+                return Unauthorized("Usuario no encontrado");
             }
 
-            var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, false);
-            if (!result.Succeeded)
-            {
-                return Unauthorized("Usuario o contraseña incorrectos");
-            }
-
+            // Genera un token JWT para el usuario
             var token = GenerateJwtToken(user);
+
             return Ok(new { token });
+        }
+
+        public class IdentityLoginModel
+        {
+            public string Email { get; set; }
+        }
+
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        {
+            if (model.Password != model.ConfirmPassword)
+            {
+                return BadRequest("Las contraseñas no coinciden");
+            }
+
+            var user = new IdentityUser { UserName = model.Email, Email = model.Email };
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                return Ok(new { message = "Usuario registrado correctamente" });
+            }
+
+            return BadRequest(result.Errors);
         }
 
         private string GenerateJwtToken(IdentityUser user)

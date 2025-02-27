@@ -24,22 +24,22 @@ namespace Empleados.DataAccess.Repositories
         {
             // Asegurarse de que pageIndex es al menos 1
             pageIndex = pageIndex < 1 ? 1 : pageIndex;
-            
+
             var query = _context.Empleados.AsQueryable();
-            
+
             // Aplicar búsqueda si hay un término de búsqueda
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
                 searchTerm = searchTerm.ToLower();
-                query = query.Where(e => 
-                    e.Nombre.ToLower().Contains(searchTerm) || 
-                    e.Apellido.ToLower().Contains(searchTerm) || 
+                query = query.Where(e =>
+                    e.Nombre.ToLower().Contains(searchTerm) ||
+                    e.Apellido.ToLower().Contains(searchTerm) ||
                     e.Email.ToLower().Contains(searchTerm));
             }
-            
+
             // Obtener el número total de elementos
             var totalCount = await query.CountAsync();
-            
+
             // Aplicar paginación
             var items = await query
                 .OrderBy(e => e.Apellido)
@@ -47,7 +47,7 @@ namespace Empleados.DataAccess.Repositories
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
-            
+
             // Crear y devolver el resultado paginado
             return new PaginatedResult<Empleado>
             {
@@ -73,7 +73,11 @@ namespace Empleados.DataAccess.Repositories
 
         public async Task<Empleado> UpdateAsync(Empleado empleado)
         {
+            _context.Entry(empleado).State = EntityState.Detached;
+
+            _context.Empleados.Attach(empleado);
             _context.Entry(empleado).State = EntityState.Modified;
+
             await _context.SaveChangesAsync();
             return empleado;
         }

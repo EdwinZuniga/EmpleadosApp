@@ -10,11 +10,13 @@ namespace EmpleadosMVC.Controllers
     {
         private readonly EmpleadoApiService _empleadoApiService;
         private readonly ILogger<EmpleadosController> _logger;
+        private readonly AuthService _authService;
 
-        public EmpleadosController(EmpleadoApiService empleadoApiService, ILogger<EmpleadosController> logger)
+        public EmpleadosController(EmpleadoApiService empleadoApiService, ILogger<EmpleadosController> logger, AuthService authService)
         {
             _empleadoApiService = empleadoApiService;
             _logger = logger;
+            _authService = authService;
         }
 
         // GET: Empleados
@@ -22,17 +24,26 @@ namespace EmpleadosMVC.Controllers
         {
             try
             {
+                if (User.Identity.IsAuthenticated && !_authService.IsAuthenticated())
+                {
+                    // Obtiene token para el usuario de Identity
+                    await _authService.GetTokenForIdentityUserAsync(User.Identity.Name);
+                }
                 ViewBag.CurrentSearchTerm = searchTerm;
-                
+
                 var result = await _empleadoApiService.GetPagedEmpleadosAsync(pageIndex, pageSize, searchTerm);
                 return View(result);
+            }
+            catch (UnauthorizedAccessException)
+            {
+                return RedirectToAction("Login", "Auth", new { returnUrl = Url.Action("Index", "Empleados") });
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error al obtener la lista de empleados");
                 TempData["ErrorMessage"] = "No se pudo obtener la lista de empleados. Por favor, intente de nuevo más tarde.";
-                return View(new PaginatedResult<Empleado> 
-                { 
+                return View(new PaginatedResult<Empleado>
+                {
                     Items = new List<Empleado>(),
                     PageIndex = pageIndex,
                     PageSize = pageSize,
