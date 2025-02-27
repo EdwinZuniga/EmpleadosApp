@@ -1,0 +1,30 @@
+# Archivos de Visual Studio y VS Code
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build y dependencias
+bin/
+obj/
+out/
+*.dll
+*.exe
+*.pdb
+*.cache
+*.log
+
+# Archivos de configuración y secretos
+appsettings.json
+appsettings.Development.json
+secrets.json
+
+# Archivos de Entity Framework
+Migrations/
+*.mdf
+*.ldf
+
+# Archivos de sistema
+Thumbs.db
+.DS_Store
