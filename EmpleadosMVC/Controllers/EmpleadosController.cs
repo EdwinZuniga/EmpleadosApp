@@ -1,13 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Empleados.Models;
 using EmpleadosMVC.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 namespace EmpleadosMVC.Controllers
 {
+    [Authorize]
     public class EmpleadosController : Controller
     {
         private readonly EmpleadoApiService _empleadoApiService;
