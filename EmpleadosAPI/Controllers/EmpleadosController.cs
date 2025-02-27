@@ -7,7 +7,7 @@ namespace EmpleadosAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    //[Authorize]
     public class EmpleadosController : ControllerBase
     {
         private readonly IEmpleadoService _empleadoService;

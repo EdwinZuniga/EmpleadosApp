@@ -2,6 +2,7 @@ using EmpleadosMVC.Data;
 using EmpleadosMVC.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using EmpleadosMVC.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
