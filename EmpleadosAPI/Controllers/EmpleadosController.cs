@@ -24,13 +24,13 @@ namespace EmpleadosAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Empleado>>> GetEmpleados(
             [FromQuery] int pageIndex = 1,
-            [FromQuery] int pageSize = 10,
+            [FromQuery] int pageSize = 5,
             [FromQuery] string searchTerm = null)
         {
             try
             {
                 if (pageSize <= 0)
-                    pageSize = 10;
+                    pageSize = 5;
 
                 if (pageIndex <= 0)
                     pageIndex = 1;

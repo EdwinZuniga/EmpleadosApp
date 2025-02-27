@@ -1,8 +1,55 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Bienvenido - Sistema de Gestión de Empleados";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Bienvenido</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+    <!-- Hero Section -->
+    <div class="jumbotron bg-light p-5 rounded-lg shadow text-center">
+        <h1 class="display-4 text-primary"><i class="fas fa-users-cog me-2"></i>Bienvenido al Sistema de Gestión de Empleados</h1>
+        <p class="lead">Gestiona y organiza la información de tus empleados de manera eficiente y segura.</p>
+        <hr class="my-4">
+        <p>Explora las funcionalidades y comienza a administrar tu equipo hoy mismo.</p>
+        <a asp-controller="Empleados" asp-action="Index" class="btn btn-primary btn-lg"><i class="fas fa-users me-2"></i>Ver Empleados</a>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row mt-5">
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-user-plus fa-3x text-primary mb-3"></i>
+                    <h4 class="card-title">Agregar Empleados</h4>
+                    <p class="card-text">Registra nuevos empleados de manera rápida y sencilla.</p>
+                    <a asp-controller="Empleados" asp-action="Create" class="btn btn-outline-primary"><i class="fas fa-plus-circle me-2"></i>Crear Empleado</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-search fa-3x text-info mb-3"></i>
+                    <h4 class="card-title">Buscar Empleados</h4>
+                    <p class="card-text">Encuentra empleados por nombre, puesto o salario.</p>
+                    <a asp-controller="Empleados" asp-action="Index" class="btn btn-outline-info"><i class="fas fa-search me-2"></i>Buscar</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow">
+                <div class="card-body text-center">
+                    <i class="fas fa-chart-line fa-3x text-success mb-3"></i>
+                    <h4 class="card-title">Estadísticas</h4>
+                    <p class="card-text">Visualiza métricas clave sobre tu equipo.</p>
+                    <a asp-controller="Empleados" asp-action="Index" class="btn btn-outline-success"><i class="fas fa-chart-bar me-2"></i>Ver Estadísticas</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="text-center mt-5">
+        <h2 class="text-secondary">¿Listo para comenzar?</h2>
+        <p class="lead">Accede a todas las funcionalidades del sistema.</p>
+        <a asp-controller="Empleados" asp-action="Index" class="btn btn-primary btn-lg"><i class="fas fa-play-circle me-2"></i>Comenzar</a>
+    </div>
 </div>

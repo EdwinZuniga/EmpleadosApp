@@ -20,7 +20,7 @@ namespace EmpleadosMVC.Controllers
         }
 
         // GET: Empleados
-        public async Task<IActionResult> Index(string searchTerm, int pageIndex = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(string searchTerm, int pageIndex = 1, int pageSize = 5)
         {
             try
             {
